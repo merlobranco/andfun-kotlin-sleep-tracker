@@ -26,7 +26,10 @@ abstract class SleepDatabase : RoomDatabase() {
 
     abstract val sleepDatabaseDao: SleepDatabaseDao
 
+    // With the companion annotation there is not need for creating an instance of this class
     companion object {
+
+        // With volatile we make sure the changes made by one thread is automatically seen by the rest of the threads
         @Volatile
         private var INSTANCE: SleepDatabase? = null
 
