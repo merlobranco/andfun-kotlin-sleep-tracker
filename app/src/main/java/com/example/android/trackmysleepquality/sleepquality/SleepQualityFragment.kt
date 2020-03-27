@@ -22,7 +22,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
 
 /**
@@ -32,6 +37,9 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityB
  * and the database is updated.
  */
 class SleepQualityFragment : Fragment() {
+
+    private lateinit var viewModel: SleepQualityViewModel
+    private lateinit var viewModelFactory: SleepQualityViewModelFactory
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -46,6 +54,31 @@ class SleepQualityFragment : Fragment() {
                 inflater, R.layout.fragment_sleep_quality, container, false)
 
         val application = requireNotNull(this.activity).application
+
+        // Getting the arguments (SleepNight ID)
+        val arguments = SleepQualityFragmentArgs.fromBundle(arguments!!)
+
+        // Getting a reference to the DAO of the database
+        val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
+
+        // Create an instance of the ViewModel Factory.
+        viewModelFactory = SleepQualityViewModelFactory(arguments.sleepNightKey, dataSource)
+
+        // Get a reference to the ViewModel associated with this fragment.
+        viewModel =
+                ViewModelProvider(
+                        this, viewModelFactory).get(SleepQualityViewModel::class.java)
+
+        binding.sleepQualityViewModel = viewModel
+
+        // Observing the NavigateToSleepTracker event
+        viewModel.navigateToSleepTracker.observe(viewLifecycleOwner,  Observer {
+            if (it == true) { // Observed state is true.
+                val action = SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment()
+                findNavController().navigate(action)
+                viewModel.doneNavigating()
+            }
+        })
 
         return binding.root
     }
