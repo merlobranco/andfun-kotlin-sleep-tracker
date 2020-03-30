@@ -79,7 +79,7 @@ class SleepTrackerFragment : Fragment() {
         viewModel.nights.observe(viewLifecycleOwner, Observer {
             nights ->
             nights?.let {
-                adapter.data = nights
+                adapter.submitList(nights)
             }
         })
 
