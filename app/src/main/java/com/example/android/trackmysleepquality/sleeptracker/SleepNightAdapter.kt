@@ -32,6 +32,10 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return from(parent)
+    }
+
+    fun from(parent: ViewGroup): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater
                 .inflate(R.layout.list_item_sleep_night, parent, false)
