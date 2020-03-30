@@ -27,6 +27,8 @@ buildscript {
         version_lifecycle_extensions = "2.0.0"
         version_navigation = '1.0.0-beta02'
         version_room = "2.0.0"
+        version_appcompat = "1.0.2"
+        version_fragment = "1.0.0"
     }
 
     repositories {
