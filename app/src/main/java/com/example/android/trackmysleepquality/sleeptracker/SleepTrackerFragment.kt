@@ -26,6 +26,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
@@ -73,6 +74,11 @@ class SleepTrackerFragment : Fragment() {
         // Telling to the recycle view to use the provided adapter to display items on the screen
         val adapter = SleepNightAdapter()
         binding.sleepList.adapter = adapter
+
+        // Adding GridLayout.
+        // Telling to the recycle view to use the provided layout manager to display items on the screen
+        val manager = GridLayoutManager(activity, 3)
+        binding.sleepList.layoutManager = manager
 
         // By using the viewLifecycleOwner we are making sure this observer only around
         // while the recycle view is still on screen
