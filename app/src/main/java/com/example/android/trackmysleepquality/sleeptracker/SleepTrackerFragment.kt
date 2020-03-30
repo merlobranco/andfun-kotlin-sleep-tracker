@@ -70,6 +70,19 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = viewModel
         binding.lifecycleOwner = this
 
+        // Telling to the recycle view to use the provided adapter to display items on the screen
+        val adapter = SleepNightAdapter()
+        binding.sleepList.adapter = adapter
+
+        // By using the viewLifecycleOwner we are making sure this observer only around
+        // while the recycle view is still on screen
+        viewModel.nights.observe(viewLifecycleOwner, Observer {
+            nights ->
+            nights?.let {
+                adapter.data = nights
+            }
+        })
+
         // Observing the NavigateToSleepQuality event
         viewModel.navigateToSleepQuality.observe(viewLifecycleOwner, Observer {
             night ->

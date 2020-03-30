@@ -43,7 +43,7 @@ class SleepTrackerViewModel(
     private var tonight = MutableLiveData<SleepNight?>()
 
     // Returning LiveDate from Room, so any change made on the database will de displayed automatically, we don't need to do anything else
-    private val nights = database.getAllNights()
+    val nights = database.getAllNights()
 
     // Defining NavigateToSleepQuality event
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
