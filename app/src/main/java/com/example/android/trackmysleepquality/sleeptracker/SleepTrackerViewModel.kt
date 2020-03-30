@@ -50,6 +50,12 @@ class SleepTrackerViewModel(
     val navigateToSleepQuality: LiveData<SleepNight>
         get() = _navigateToSleepQuality
 
+    // Defining NavigateToSleepDataQuality event
+    // For displaying Sleep Detail Data
+    private val _navigateToSleepDataQuality = MutableLiveData<Long>()
+    val navigateToSleepDataQuality
+        get() = _navigateToSleepDataQuality
+
     // Defining ShowSnackbarEvent
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
     val showSnackBarEvent: LiveData<Boolean>
@@ -127,6 +133,10 @@ class SleepTrackerViewModel(
         }
     }
 
+    fun doneNavigating() {
+        _navigateToSleepQuality.value = null
+    }
+
     // Clear Button click handler
     fun onClear() {
         uiScope.launch {
@@ -142,12 +152,17 @@ class SleepTrackerViewModel(
         }
     }
 
-    fun doneNavigating() {
-        _navigateToSleepQuality.value = null
-    }
-
     fun doneShowingSnackbar() {
         _showSnackbarEvent.value = false
+    }
+
+    // Item Click handler
+    fun onSleepNightClicked(id: Long){
+        _navigateToSleepDataQuality.value = id
+    }
+
+    fun onSleepDataQualityNavigated() {
+        _navigateToSleepDataQuality.value = null
     }
 
     override fun onCleared() {
