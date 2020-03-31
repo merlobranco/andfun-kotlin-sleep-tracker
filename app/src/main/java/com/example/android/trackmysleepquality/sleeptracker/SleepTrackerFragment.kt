@@ -72,7 +72,7 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = viewModel
         binding.lifecycleOwner = this
 
-        // Telling to the recycle view to use the provided adapter to display items on the screen
+        // Telling to the fragment displaying the recycle views to use the provided adapter to display items on the screen
         val adapter = SleepNightAdapter(SleepNightListener { nightId ->
             viewModel.onSleepNightClicked(nightId)
         })
@@ -81,20 +81,27 @@ class SleepTrackerFragment : Fragment() {
         // Adding GridLayout.
         // Telling to the recycle view to use the provided layout manager to display items on the screen
         val manager = GridLayoutManager(activity, 3)
+
+        // Customizing the span for either the Header of the SleepNight Item
+        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) = when (position) {
+                0 -> 3
+                else -> 1
+            }
+        }
+
         binding.sleepList.layoutManager = manager
 
         // By using the viewLifecycleOwner we are making sure this observer only around
         // while the recycle view is still on screen
-        viewModel.nights.observe(viewLifecycleOwner, Observer {
-            nights ->
+        viewModel.nights.observe(viewLifecycleOwner, Observer { nights ->
             nights?.let {
                 adapter.addHeaderAndSubmitList(nights)
             }
         })
 
         // Observing the NavigateToSleepQuality event
-        viewModel.navigateToSleepQuality.observe(viewLifecycleOwner, Observer {
-            night ->
+        viewModel.navigateToSleepQuality.observe(viewLifecycleOwner, Observer { night ->
             // Equivalent to if(night != null) {...} for mutable properties
             night?.let {
                 val action = SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(night.nightId)
@@ -116,7 +123,7 @@ class SleepTrackerFragment : Fragment() {
         })
 
         // Observing the Item click event
-        viewModel.navigateToSleepDataQuality.observe(viewLifecycleOwner, Observer {night ->
+        viewModel.navigateToSleepDataQuality.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
                 val action = SleepTrackerFragmentDirections
                         .actionSleepTrackerFragmentToSleepDetailFragment(night)
