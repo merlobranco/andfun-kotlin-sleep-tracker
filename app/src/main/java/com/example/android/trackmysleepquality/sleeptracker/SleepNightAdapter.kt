@@ -15,9 +15,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 // Required to figure out what view type to return: header or item
-private val ITEM_VIEW_TYPE_HEADER = 0
-private val ITEM_VIEW_TYPE_ITEM = 1
+private const val ITEM_VIEW_TYPE_HEADER = 0
+private const val ITEM_VIEW_TYPE_ITEM = 1
 
+// ListAdapter supports any kind of ViewHolder
 class SleepNightAdapter(val clickListener: SleepNightListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -113,11 +114,17 @@ class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
     fun onClick(night: SleepNight) = clickListener(night.nightId)
 }
 
+// Declaring a holder class the represents either the SleepNight or the Header
+// sealed class defines a closed type, meaning all the subtypes should be define inside this class
+// All the subclasses are known by the compiler and it's not possible defining a new DataItem subtype
+// in another part of our code breaking our adapter
 sealed class DataItem {
     data class SleepNightItem(val sleepNight: SleepNight): DataItem() {
         override val id = sleepNight.nightId
     }
 
+    // Since the header does not have any data  we could declare it directly as an object,
+    // meaning we only have one instance of this class
     object Header: DataItem() {
         override val id = Long.MIN_VALUE
     }
